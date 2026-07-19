@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "test": "bun test",
+    "release": "bun test && bun build ./src/main.js --outfile ./dist/main.js --target browser --format=iife"
+  }
+}
