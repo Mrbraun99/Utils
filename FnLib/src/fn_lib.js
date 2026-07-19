@@ -1,5 +1,7 @@
 import { FnLib__Math } from "./fn_lib__math.js";
+import { FnLib__Array1D } from "./fn_lib__array1d.js";
 
 export class FnLib {
     static Math = FnLib__Math;
+    static Array1D = FnLib__Array1D;
 }
