@@ -1,6 +1,13 @@
 {
   "scripts": {
-    "test": "bun test",
-    "release": "bun test && bun build ./src/main.js --outfile ./dist/main.js --target browser --format=iife"
+    "test": "vitest run",
+    "coverage": "vitest run --coverage && bun run coverage.js",
+    "release": "vitest run && bun build ./src/main.js --outfile ./dist/main.js --target browser --format=iife"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "2",
+    "ansis": "^4.3.1",
+    "cli-table3": "^0.6.5",
+    "vitest": "2"
   }
 }
