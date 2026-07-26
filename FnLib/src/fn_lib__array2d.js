@@ -45,4 +45,12 @@ export class FnLib__Array2D {
     static max(arr, fn = null, indexes = false) {
         return this._extreme(arr, fn, (a, b) => a > b, indexes);
     }
+
+    static every(arr, fn) {
+        return arr.every((row, y) => row.every((value, x) => fn(value, x, y, arr)));
+    }
+
+    static some(arr, fn) {
+        return arr.some((row, y) => row.some((value, x) => fn(value, x, y, arr)));
+    }
 }
