@@ -58,4 +58,20 @@ export class FnLib__Array1D {
     static zipWith(fn, ...arrays) {
         return Array.from({ length: Math.min(...arrays.map(arr => arr.length)) }, (_, i) => fn(...arrays.map(arr => arr[i])));
     }
+
+    static randomChoice(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    static shuffle(arr, modify = false) {
+        const result = modify ? arr : [...arr];
+
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+
+            [result[i], result[j]] = [result[j], result[i]];
+        }
+
+        return result;
+    }
 }
