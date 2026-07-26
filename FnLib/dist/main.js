@@ -53,6 +53,17 @@
     static zipWith(fn, ...arrays) {
       return Array.from({ length: Math.min(...arrays.map((arr) => arr.length)) }, (_, i) => fn(...arrays.map((arr) => arr[i])));
     }
+    static randomChoice(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+    static shuffle(arr, modify = false) {
+      const result = modify ? arr : [...arr];
+      for (let i = result.length - 1;i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
   }
 
   // src/fn_lib__array2d.js
@@ -94,6 +105,42 @@
     static max(arr, fn = null, indexes = false) {
       return this._extreme(arr, fn, (a, b) => a > b, indexes);
     }
+    static every(arr, fn) {
+      return arr.every((row, y) => row.every((value, x) => fn(value, x, y, arr)));
+    }
+    static some(arr, fn) {
+      return arr.some((row, y) => row.some((value, x) => fn(value, x, y, arr)));
+    }
+  }
+
+  // src/fn_lib__bit.js
+  class FnLib__Bit {
+    static count(number) {
+      let value = typeof number == "bigint" ? number : BigInt(number);
+      let count = 0;
+      while (value != 0n) {
+        value &= value - 1n;
+        count++;
+      }
+      return count;
+    }
+    static indexes(number) {
+      let value = typeof number == "bigint" ? number : BigInt(number);
+      const result = [];
+      let index = 0;
+      while (value != 0n) {
+        if ((value & 1n) != 0n) {
+          result.push(index);
+        }
+        value >>= 1n;
+        index++;
+      }
+      return result;
+    }
+    static hasSingleOne(number) {
+      const value = typeof number == "bigint" ? number : BigInt(number);
+      return value > 0n && (value & value - 1n) == 0n;
+    }
   }
 
   // src/fn_lib.js
@@ -101,6 +148,16 @@
     static Math = FnLib__Math;
     static Array1D = FnLib__Array1D;
     static Array2D = FnLib__Array2D;
+    static Bit = FnLib__Bit;
+    static isNumber(value) {
+      return Number.isFinite(value);
+    }
+    static isNumeric(value) {
+      return typeof value == "number" && Number.isFinite(value) || typeof value == "string" && value.trim() != "" && Number.isFinite(Number(value));
+    }
+    static isArray(value) {
+      return Array.isArray(value);
+    }
   }
 
   // src/main.js
