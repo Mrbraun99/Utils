@@ -27,7 +27,7 @@ export class FnLib__Bit {
         return result;
     }
 
-    static hasSingleOne(number) {
+    static hasOnlyOneBitSet(number) {
         const value = (typeof number == 'bigint') ? number : BigInt(number);
         return value > 0n && (value & (value - 1n)) == 0n;
     }

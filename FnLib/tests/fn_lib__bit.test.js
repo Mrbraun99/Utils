@@ -15,7 +15,7 @@ test("FnLib.Bit.indexes()", () => {
 });
 
 test("FnLib.Bit.hasSingleOne()", () => {
-    expect(FnLib.Bit.hasSingleOne(2)).toBe(true);
-    expect(FnLib.Bit.hasSingleOne(16)).toBe(true);
-    expect(FnLib.Bit.hasSingleOne(5)).toBe(false);
+    expect(FnLib.Bit.hasOnlyOneBitSet(2)).toBe(true);
+    expect(FnLib.Bit.hasOnlyOneBitSet(16)).toBe(true);
+    expect(FnLib.Bit.hasOnlyOneBitSet(5)).toBe(false);
 });

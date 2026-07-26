@@ -5,7 +5,7 @@ export default defineConfig({
         passWithNoTests: true,
         coverage: {
             provider: 'v8',
-            reporter: ['lcov', 'text'],
+            reporter: ['lcov'],
             reportsDirectory: './coverage',
             include: ['src/**/*.js', '!src/main.js'],
 
