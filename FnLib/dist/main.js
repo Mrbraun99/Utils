@@ -141,9 +141,9 @@
       const [zero, one] = typeof number === "bigint" ? [0n, 1n] : [0, 1];
       return number > zero && (number & number - one) === zero;
     }
-    static set(number, index) {
+    static set(number, index, bit = 1) {
       const [one, shift_index] = typeof number === "bigint" ? [1n, BigInt(index)] : [1, index];
-      return number | one << shift_index;
+      return bit == 1 ? number | one << shift_index : number & ~(one << shift_index);
     }
   }
 
