@@ -116,30 +116,34 @@
   // src/fn_lib__bit.js
   class FnLib__Bit {
     static count(number) {
-      let value = typeof number == "bigint" ? number : BigInt(number);
       let count = 0;
-      while (value != 0n) {
-        value &= value - 1n;
+      const [zero, one] = typeof number === "bigint" ? [0n, 1n] : [0, 1];
+      while (number !== zero) {
+        number &= number - one;
         count++;
       }
       return count;
     }
     static indexes(number) {
-      let value = typeof number == "bigint" ? number : BigInt(number);
+      const [zero, one] = typeof number === "bigint" ? [0n, 1n] : [0, 1];
       const result = [];
       let index = 0;
-      while (value != 0n) {
-        if ((value & 1n) != 0n) {
+      while (number !== zero) {
+        if ((number & one) !== zero) {
           result.push(index);
         }
-        value >>= 1n;
+        number >>= one;
         index++;
       }
       return result;
     }
     static hasOnlyOneBitSet(number) {
-      const value = typeof number == "bigint" ? number : BigInt(number);
-      return value > 0n && (value & value - 1n) == 0n;
+      const [zero, one] = typeof number === "bigint" ? [0n, 1n] : [0, 1];
+      return number > zero && (number & number - one) === zero;
+    }
+    static set(number, index) {
+      const [one, shift_index] = typeof number === "bigint" ? [1n, BigInt(index)] : [1, index];
+      return number | one << shift_index;
     }
   }
 
