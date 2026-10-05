@@ -14,9 +14,11 @@ export class Viewport {
 	static GRID_SIZE = 10;
 	static MIN_ZOOM = 0.5;
 	static MAX_ZOOM = 5.5;
+	static PAN_THRESHOLD = 0;
 
 	static zoom = 1;
 	static panning = false;
+	static has_panned = false;
 	static offset = { x: 0, y: 0 };
 	static zoom_offset = { x: 0, y: 0 };
 	static pan_start = { x: 0, y: 0 };
@@ -26,10 +28,12 @@ export class Viewport {
 		Viewport.pan_start = { x: mouseX, y: mouseY };
 		Viewport.pan_origin = { x: Viewport.offset.x, y: Viewport.offset.y };
 		Viewport.panning = true;
+		Viewport.has_panned = false;
 	}
 
 	static stopPan() {
 		Viewport.panning = false;
+		return Viewport.has_panned;
 	}
 
 	static applyZoom(scale) {
@@ -45,6 +49,10 @@ export class Viewport {
 		if (Viewport.panning) {
 			Viewport.offset.x = Viewport.pan_origin.x + (mouseX - Viewport.pan_start.x) / Viewport.zoom;
 			Viewport.offset.y = Viewport.pan_origin.y + (mouseY - Viewport.pan_start.y) / Viewport.zoom;
+
+			if (!Viewport.has_panned && Math.hypot(mouseX - Viewport.pan_start.x, mouseY - Viewport.pan_start.y) > Viewport.PAN_THRESHOLD) {
+				Viewport.has_panned = true;
+			}
 		}
 
 		translate(Viewport.zoom_offset.x, Viewport.zoom_offset.y);
