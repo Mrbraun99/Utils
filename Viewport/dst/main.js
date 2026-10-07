@@ -62,25 +62,25 @@
 
   // src/viewport__grid.js
   class Viewport__Grid {
-    static toGlobal(grid_pos_x, grid_pos_y, align = Viewport.ALIGN.CENTER) {
+    static toGlobal(grid_pos_x, grid_pos_y, align = Viewport.Align.CENTER) {
       return { x: Viewport.Grid.toGlobalX(grid_pos_x, align), y: Viewport.Grid.toGlobalY(grid_pos_y, align) };
     }
-    static toGlobalX(grid_pos_x, align = Viewport.ALIGN.CENTER) {
+    static toGlobalX(grid_pos_x, align = Viewport.Align.CENTER) {
       switch (align) {
-        case Viewport.ALIGN.CORNER: {
+        case Viewport.Align.CORNER: {
           return grid_pos_x * Viewport.GRID_SIZE;
         }
-        case Viewport.ALIGN.CENTER: {
+        case Viewport.Align.CENTER: {
           return grid_pos_x * Viewport.GRID_SIZE + Viewport.GRID_SIZE / 2;
         }
       }
     }
-    static toGlobalY(grid_pos_y, align = Viewport.ALIGN.CENTER) {
+    static toGlobalY(grid_pos_y, align = Viewport.Align.CENTER) {
       switch (align) {
-        case Viewport.ALIGN.CORNER: {
+        case Viewport.Align.CORNER: {
           return grid_pos_y * Viewport.GRID_SIZE;
         }
-        case Viewport.ALIGN.CENTER: {
+        case Viewport.Align.CENTER: {
           return grid_pos_y * Viewport.GRID_SIZE + Viewport.GRID_SIZE / 2;
         }
       }
@@ -93,7 +93,7 @@
     static Global = Viewport__Global;
     static Mouse = Viewport__Mouse;
     static Grid = Viewport__Grid;
-    static ALIGN = Object.freeze({ CORNER: "CORNER", CENTER: "CENTER" });
+    static Align = Object.freeze({ CORNER: "CORNER", CENTER: "CENTER" });
     static GRID_SIZE = 10;
     static MIN_ZOOM = 0.5;
     static MAX_ZOOM = 5.5;
@@ -136,10 +136,10 @@
     }
     static __align(global, mode) {
       switch (mode) {
-        case Viewport2.ALIGN.CORNER: {
+        case Viewport2.Align.CORNER: {
           return Math.floor(global / Viewport2.GRID_SIZE) * Viewport2.GRID_SIZE;
         }
-        case Viewport2.ALIGN.CENTER: {
+        case Viewport2.Align.CENTER: {
           return Math.floor(global / Viewport2.GRID_SIZE) * Viewport2.GRID_SIZE + Viewport2.GRID_SIZE / 2;
         }
       }

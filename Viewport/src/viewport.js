@@ -9,7 +9,7 @@ export class Viewport {
 	static Mouse = Viewport__Mouse;
 	static Grid = Viewport__Grid;
 
-	static ALIGN = Object.freeze({ CORNER: "CORNER", CENTER: "CENTER" });
+	static Align = Object.freeze({ CORNER: "CORNER", CENTER: "CENTER" });
 
 	static GRID_SIZE = 10;
 	static MIN_ZOOM = 0.5;
@@ -62,10 +62,10 @@ export class Viewport {
 
 	static __align(global, mode) {
 		switch (mode) {
-			case Viewport.ALIGN.CORNER: {
+			case Viewport.Align.CORNER: {
 				return Math.floor(global / Viewport.GRID_SIZE) * Viewport.GRID_SIZE;
 			}
-			case Viewport.ALIGN.CENTER: {
+			case Viewport.Align.CENTER: {
 				return Math.floor(global / Viewport.GRID_SIZE) * Viewport.GRID_SIZE + Viewport.GRID_SIZE / 2;
 			}
 		}
