@@ -6,6 +6,10 @@ export class Intersection__Point {
 		rect(pos, size, rotation = 0, anchor = { x: 0.5, y: 0.5 }) {
 			return Intersection__Point.rect(this.x, this.y, pos, size, rotation, anchor);
 		},
+
+		circle(pos, radius) {
+			return Intersection__Point.circle(this.x, this.y, pos, radius);
+		},
 	};
 
 	static instance(x, y) {
@@ -31,5 +35,12 @@ export class Intersection__Point {
 		}
 
 		return local_x >= -anchor.x * size.x && local_x <= (1 - anchor.x) * size.x && local_y >= -anchor.y * size.y && local_y <= (1 - anchor.y) * size.y;
+	}
+
+	static circle(x, y, pos, radius) {
+		const dx = x - pos.x;
+		const dy = y - pos.y;
+
+		return dx * dx + dy * dy <= radius * radius;
 	}
 }
