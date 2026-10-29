@@ -7,6 +7,9 @@
     static random(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+    static equalFloat(a, b, epsilon = 1e-4) {
+      return Math.abs(a - b) < epsilon;
+    }
   }
 
   // src/fn_lib__array1d.js
@@ -20,7 +23,7 @@
       }
       let extreme = fn(arr[0]);
       let index_list = indexes ? [0] : null;
-      for (let i = 1;i < arr.length; i++) {
+      for (let i = 1; i < arr.length; i++) {
         const value = fn(arr[i]);
         if (compare(value, extreme)) {
           extreme = value;
@@ -61,7 +64,7 @@
     }
     static shuffle(arr, modify = false) {
       const result = modify ? arr : [...arr];
-      for (let i = result.length - 1;i > 0; i--) {
+      for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [result[i], result[j]] = [result[j], result[i]];
       }
@@ -87,8 +90,8 @@
       const sizeY = this.getSizeY(arr);
       let extreme = fn(arr[0][0]);
       let index_list = indexes ? [{ x: 0, y: 0 }] : null;
-      for (let y = 0;y < sizeY; y++) {
-        for (let x = 0;x < sizeX; x++) {
+      for (let y = 0; y < sizeY; y++) {
+        for (let x = 0; x < sizeX; x++) {
           if (x == 0 && y == 0)
             continue;
           const value = fn(arr[y][x]);
