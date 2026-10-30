@@ -1,0 +1,218 @@
+// src/fn_lib__math.js
+class FnLib__Math {
+  static mod(value, modulo) {
+    return (value % modulo + modulo) % modulo;
+  }
+  static random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  static equalFloat(a, b, epsilon = 0.0001) {
+    return Math.abs(a - b) < epsilon;
+  }
+}
+
+// src/fn_lib__array1d.js
+class FnLib__Array1D {
+  static create(size, fill = null) {
+    return Array.from({ length: size }, (_, i) => typeof fill == "function" ? fill(i) : fill);
+  }
+  static _extreme(arr, fn, compare, indexes) {
+    if (fn == null) {
+      fn = (x) => x;
+    }
+    let extreme = fn(arr[0]);
+    let index_list = indexes ? [0] : null;
+    for (let i = 1;i < arr.length; i++) {
+      const value = fn(arr[i]);
+      if (compare(value, extreme)) {
+        extreme = value;
+        index_list = indexes ? [i] : null;
+      } else if (indexes && value == extreme) {
+        index_list.push(i);
+      }
+    }
+    return indexes ? { value: extreme, indexes: index_list } : extreme;
+  }
+  static min(arr, fn = null, indexes = false) {
+    return this._extreme(arr, fn, (a, b) => a < b, indexes);
+  }
+  static max(arr, fn = null, indexes = false) {
+    return this._extreme(arr, fn, (a, b) => a > b, indexes);
+  }
+  static sum(arr, fn = null) {
+    if (fn == null) {
+      fn = (x) => x;
+    }
+    return arr.reduce((acc, e) => acc + Number(fn(e)), 0);
+  }
+  static same(arr, fn = null) {
+    if (fn == null) {
+      fn = (x) => x;
+    }
+    if (arr.length == 0) {
+      return true;
+    }
+    const first = fn(arr[0]);
+    return arr.every((e) => fn(e) == first);
+  }
+  static zipWith(fn, ...arrays) {
+    return Array.from({ length: Math.min(...arrays.map((arr) => arr.length)) }, (_, i) => fn(...arrays.map((arr) => arr[i])));
+  }
+  static randomChoice(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+  static shuffle(arr, modify = false) {
+    const result = modify ? arr : [...arr];
+    for (let i = result.length - 1;i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
+}
+
+// src/fn_lib__array2d.js
+class FnLib__Array2D {
+  static create(size, fill = null) {
+    return Array.from({ length: size.y }, (_, y) => Array.from({ length: size.x }, (_, x) => typeof fill == "function" ? fill(x, y) : fill));
+  }
+  static getSizeX(arr) {
+    return arr[0]?.length ?? 0;
+  }
+  static getSizeY(arr) {
+    return arr.length;
+  }
+  static _extreme(arr, fn, compare, indexes) {
+    if (fn == null)
+      fn = (x) => x;
+    const sizeX = this.getSizeX(arr);
+    const sizeY = this.getSizeY(arr);
+    let extreme = fn(arr[0][0]);
+    let index_list = indexes ? [{ x: 0, y: 0 }] : null;
+    for (let y = 0;y < sizeY; y++) {
+      for (let x = 0;x < sizeX; x++) {
+        if (x == 0 && y == 0)
+          continue;
+        const value = fn(arr[y][x]);
+        if (compare(value, extreme)) {
+          extreme = value;
+          index_list = indexes ? [{ x, y }] : null;
+        } else if (indexes && value == extreme) {
+          index_list.push({ x, y });
+        }
+      }
+    }
+    return indexes ? { value: extreme, indexes: index_list } : extreme;
+  }
+  static min(arr, fn = null, indexes = false) {
+    return this._extreme(arr, fn, (a, b) => a < b, indexes);
+  }
+  static max(arr, fn = null, indexes = false) {
+    return this._extreme(arr, fn, (a, b) => a > b, indexes);
+  }
+  static every(arr, fn) {
+    return arr.every((row, y) => row.every((value, x) => fn(value, x, y, arr)));
+  }
+  static some(arr, fn) {
+    return arr.some((row, y) => row.some((value, x) => fn(value, x, y, arr)));
+  }
+}
+
+// src/fn_lib__bit.js
+class FnLib__Bit {
+  static count(number) {
+    let count = 0;
+    const [zero, one] = typeof number === "bigint" ? [0n, 1n] : [0, 1];
+    while (number !== zero) {
+      number &= number - one;
+      count++;
+    }
+    return count;
+  }
+  static indexes(number) {
+    const [zero, one] = typeof number === "bigint" ? [0n, 1n] : [0, 1];
+    const result = [];
+    let index = 0;
+    while (number !== zero) {
+      if ((number & one) !== zero) {
+        result.push(index);
+      }
+      number >>= one;
+      index++;
+    }
+    return result;
+  }
+  static hasOnlyOneBitSet(number) {
+    const [zero, one] = typeof number === "bigint" ? [0n, 1n] : [0, 1];
+    return number > zero && (number & number - one) === zero;
+  }
+  static set(number, index, bit = 1) {
+    const [one, shift_index] = typeof number === "bigint" ? [1n, BigInt(index)] : [1, index];
+    return bit == 1 ? number | one << shift_index : number & ~(one << shift_index);
+  }
+}
+
+// src/fn_lib__combinatorics.js
+class FnLib__Combinatorics {
+  static encodePermutation(arr) {
+    if (arr.length > 18)
+      throw new RangeError("Permutation size cannot exceed 18");
+    let code = 0;
+    for (let i = 0;i < arr.length - 1; i++) {
+      let smaller = 0;
+      for (let j = i + 1;j < arr.length; j++) {
+        if (arr[j] < arr[i])
+          smaller++;
+      }
+      code = code * (arr.length - i) + smaller;
+    }
+    return code;
+  }
+  static decodePermutation(code, size) {
+    if (size > 18)
+      throw new RangeError("Permutation size cannot exceed 18");
+    const digits = new Array(size);
+    for (let i = size - 1;i >= 0; i--) {
+      const base = size - i;
+      digits[i] = code % base;
+      code = Math.floor(code / base);
+    }
+    const arr = new Array(size);
+    let used = 0;
+    for (let i = 0;i < size; i++) {
+      let skip = digits[i];
+      for (let j = 0;j < size; j++) {
+        if ((used & 1 << j) == 0) {
+          if (skip == 0) {
+            arr[i] = j;
+            used |= 1 << j;
+            break;
+          }
+          skip--;
+        }
+      }
+    }
+    return arr;
+  }
+}
+
+// src/fn_lib.js
+class FnLib {
+  static Math = FnLib__Math;
+  static Array1D = FnLib__Array1D;
+  static Array2D = FnLib__Array2D;
+  static Bit = FnLib__Bit;
+  static Combinatorics = FnLib__Combinatorics;
+  static isNumber(value) {
+    return Number.isFinite(value);
+  }
+  static isNumeric(value) {
+    return typeof value == "number" && Number.isFinite(value) || typeof value == "string" && value.trim() != "" && Number.isFinite(Number(value));
+  }
+  static isArray(value) {
+    return Array.isArray(value);
+  }
+}
+export {
+  FnLib
+};

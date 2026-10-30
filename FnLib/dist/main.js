@@ -7,7 +7,7 @@
     static random(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    static equalFloat(a, b, epsilon = 1e-4) {
+    static equalFloat(a, b, epsilon = 0.0001) {
       return Math.abs(a - b) < epsilon;
     }
   }
@@ -23,7 +23,7 @@
       }
       let extreme = fn(arr[0]);
       let index_list = indexes ? [0] : null;
-      for (let i = 1; i < arr.length; i++) {
+      for (let i = 1;i < arr.length; i++) {
         const value = fn(arr[i]);
         if (compare(value, extreme)) {
           extreme = value;
@@ -64,7 +64,7 @@
     }
     static shuffle(arr, modify = false) {
       const result = modify ? arr : [...arr];
-      for (let i = result.length - 1; i > 0; i--) {
+      for (let i = result.length - 1;i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [result[i], result[j]] = [result[j], result[i]];
       }
@@ -90,8 +90,8 @@
       const sizeY = this.getSizeY(arr);
       let extreme = fn(arr[0][0]);
       let index_list = indexes ? [{ x: 0, y: 0 }] : null;
-      for (let y = 0; y < sizeY; y++) {
-        for (let x = 0; x < sizeX; x++) {
+      for (let y = 0;y < sizeY; y++) {
+        for (let x = 0;x < sizeX; x++) {
           if (x == 0 && y == 0)
             continue;
           const value = fn(arr[y][x]);
@@ -153,12 +153,57 @@
     }
   }
 
+  // src/fn_lib__combinatorics.js
+  class FnLib__Combinatorics {
+    static encodePermutation(arr) {
+      if (arr.length > 18)
+        throw new RangeError("Permutation size cannot exceed 18");
+      let code = 0;
+      for (let i = 0;i < arr.length - 1; i++) {
+        let smaller = 0;
+        for (let j = i + 1;j < arr.length; j++) {
+          if (arr[j] < arr[i])
+            smaller++;
+        }
+        code = code * (arr.length - i) + smaller;
+      }
+      return code;
+    }
+    static decodePermutation(code, size) {
+      if (size > 18)
+        throw new RangeError("Permutation size cannot exceed 18");
+      const digits = new Array(size);
+      for (let i = size - 1;i >= 0; i--) {
+        const base = size - i;
+        digits[i] = code % base;
+        code = Math.floor(code / base);
+      }
+      const arr = new Array(size);
+      let used = 0;
+      for (let i = 0;i < size; i++) {
+        let skip = digits[i];
+        for (let j = 0;j < size; j++) {
+          if ((used & 1 << j) == 0) {
+            if (skip == 0) {
+              arr[i] = j;
+              used |= 1 << j;
+              break;
+            }
+            skip--;
+          }
+        }
+      }
+      return arr;
+    }
+  }
+
   // src/fn_lib.js
   class FnLib {
     static Math = FnLib__Math;
     static Array1D = FnLib__Array1D;
     static Array2D = FnLib__Array2D;
     static Bit = FnLib__Bit;
+    static Combinatorics = FnLib__Combinatorics;
     static isNumber(value) {
       return Number.isFinite(value);
     }
