@@ -10,6 +10,13 @@
     static equalFloat(a, b, epsilon = 0.0001) {
       return Math.abs(a - b) < epsilon;
     }
+    static factorial(n) {
+      let result = 1;
+      for (let i = 2;i <= n; i++) {
+        result *= i;
+      }
+      return result;
+    }
   }
 
   // src/fn_lib__array1d.js
@@ -75,7 +82,7 @@
   // src/fn_lib__array2d.js
   class FnLib__Array2D {
     static create(size, fill = null) {
-      return Array.from({ length: size.y }, (_, y) => Array.from({ length: size.x }, (_, x) => typeof fill == "function" ? fill(x, y) : fill));
+      return Array.from({ length: size.y }, (_, y) => Array.from({ length: size.x }, (_2, x) => typeof fill == "function" ? fill(x, y) : fill));
     }
     static getSizeX(arr) {
       return arr[0]?.length ?? 0;

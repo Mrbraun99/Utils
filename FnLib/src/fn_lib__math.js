@@ -10,4 +10,14 @@ export class FnLib__Math {
     static equalFloat(a, b, epsilon = 1e-4) {
         return Math.abs(a - b) < epsilon;
     }
+
+    static factorial(n) {
+        let result = 1;
+
+        for (let i = 2; i <= n; i++) {
+            result *= i;
+        }
+
+        return result;
+    }
 }
